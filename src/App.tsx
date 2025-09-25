@@ -28,10 +28,11 @@ const [screen, setScreen] = useState<Screen>({ key: 'home' })
 const [query, setQuery] = useState('')
 const [cart, setCart] = useState<any[]>([])
 const [method, setMethod] = useState<'delivery' | 'pickup'>('delivery')
-const [address, setAddress] = useState({ cep: '', street: '', number: '', district: '', note: '' })
+const [address, setAddress] = useState({cep: '', street: '', number: '', district: '', city: '', note: ''})
 const [pay, setPay] = useState<'pix' | 'card' | 'cash'>('pix')
 const [coupon, setCoupon] = useState('')
 const [pixGenerated, setPixGenerated] = useState(false)
+
 
 
 const sizeFactor = { P: 1, M: 1.5, G: 2 } as const
@@ -102,7 +103,29 @@ return (
 
 
 {screen.key === 'cart' && (
-<CartScreen cart={cart} changeQty={changeQty} subtotal={subtotal} deliveryFee={deliveryFee} discount={discount} total={total} coupon={coupon} setCoupon={setCoupon} onContinue={() => setScreen({ key: 'address' })} onClear={clearCart} />
+  <CartScreen
+    cart={cart}
+    changeQty={changeQty}
+    subtotal={subtotal}
+    deliveryFee={deliveryFee}
+    discount={discount}
+    total={total}
+    coupon={coupon}
+    setCoupon={setCoupon}
+    method={method}
+    setMethod={setMethod}
+    address={address}
+    setAddress={setAddress}
+    onContinue={() => {
+      // validação mínima: se for entrega e faltou CEP/Rua, permanece no carrinho
+      if (method === 'delivery' && (!address.cep || !address.street)) {
+        alert('Preencha CEP e Rua para entrega.');
+        return;
+      }
+      setScreen({ key: 'payment' });
+    }}
+    onClear={clearCart}
+  />
 )}
 
 
