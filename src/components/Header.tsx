@@ -2,7 +2,7 @@ import { ChevronLeft, CookingPot } from 'lucide-react';
 
 
 interface AppHeaderProps {
-  readonly screen: { key: 'home' | 'detail' | 'cart' | 'address' | 'payment' | 'tracking' | 'profile' };
+  readonly screen: { key: 'home' | 'detail' | 'cart' | 'address' | 'payment' | 'tracking' | 'profile' | 'signin' | 'signup' };
   readonly onBack: () => void;
 }
 

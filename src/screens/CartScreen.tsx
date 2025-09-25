@@ -66,9 +66,6 @@ export function CartScreen(props: any) {
     }
   };
 
-  console.log(cart)
-  console.log(subtotal)
-
   return (
     <div className="px-4 py-4 mx-auto w-full max-w-[420px]">
       {cart.length === 0 ? (
