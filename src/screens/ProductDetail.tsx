@@ -14,9 +14,11 @@ export function ProductDetail({
   product,
   onAdd,
   onGoCart,
-}: { product: Product; onAdd: (size: Size, addons: Addon[]) => void; onGoCart: () => void }) {
+}: { product: Product; onAdd: (size: Size, addons: Addon[], qty: number) => void; onGoCart: () => void }) {
   const [size, setSize] = useState<Size>('M')
   const [addons, setAddons] = useState<Addon[]>([])
+
+  const [qty, setQty] = useState(1)
 
   const toggleAddon = (a: Addon) =>
     setAddons(prev => prev.find(x => x.id === a.id) ? prev.filter(x => x.id !== a.id) : [...prev, a])
@@ -25,6 +27,9 @@ export function ProductDetail({
   const base = Math.round(product.base * sizeFactor[size])
   const addonsTotal = addons.reduce((s, a) => s + a.price, 0)
   const price = base + addonsTotal
+
+  const unit = base + addonsTotal
+  const total = unit * qty
 
   return (
     <div className="pb-4">
@@ -71,14 +76,25 @@ export function ProductDetail({
           </div>
         </div>
 
+         <div className="flex items-center gap-2 ">
+          <div className="text-xs text-neutral-500">Valor unitário</div>
+          <div className="text-xl font-bold">{currency(price)}</div>
+        </div>
+
+        <div className="flex items-center gap-2">
+          <button onClick={()=>setQty(Math.max(1, qty-1))} className="p-2 border rounded-xl">-</button>
+          <span className="w-8 text-center">{qty}</span>
+          <button onClick={()=>setQty(qty+1)} className="p-2 border rounded-xl">+</button>
+        </div>
+
         <div className="flex items-center justify-between">
           <div>
             <div className="text-xs text-neutral-500">Total</div>
-            <div className="text-xl font-bold">{currency(price)}</div>
+            <div className="text-xl font-bold">{currency(total)}</div>
           </div>
           <div className="flex gap-2">
             <button onClick={onGoCart} className="px-4 py-2 rounded-xl border hover:bg-neutral-50">Ver carrinho</button>
-            <button onClick={() => onAdd(size, addons)} className="px-4 py-2 rounded-xl bg-emerald-600 text-white shadow hover:bg-emerald-700">
+            <button onClick={() => onAdd(size, addons, qty)} className="px-4 py-2 rounded-xl bg-emerald-600 text-white shadow hover:bg-emerald-700">
               Adicionar
             </button>
           </div>

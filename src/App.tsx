@@ -53,13 +53,13 @@ const total = Math.max(subtotal + deliveryFee - discount, 0)
 
 const cartCount = cart.reduce((acc: number, it: any) => acc + it.qty, 0)
 
-const addToCart = (product: Product, size: Size, addons: Addon[] = []) => {
+const addToCart = (product: Product, size: Size, addons: Addon[] = [], qty = 1) => {
   const addonKey = addons.map(a => a.id).sort().join('_')
   const id = `${product.id}-${size}-${addonKey}`
   setCart((old: any[]) => {
     const found = old.find((c) => c.id === id)
-    if (found) return old.map((c) => (c.id === id ? { ...c, qty: c.qty + 1 } : c))
-    return [...old, { id, product, size, qty: 1, addons }]
+    if (found) return old.map((c) => (c.id === id ? { ...c, qty: c.qty + qty } : c))
+    return [...old, { id, product, size, qty, addons }]
   })
 }
 
@@ -98,7 +98,7 @@ return (
 
 
 {screen.key === 'detail' && (
-<ProductDetail product={screen.product} onAdd={(size, addons) => addToCart(screen.product, size, addons)} onGoCart={() => setScreen({ key: 'cart' })} />
+<ProductDetail product={screen.product} onAdd={(size, addons, qty) => addToCart(screen.product, size, addons, qty)} onGoCart={() => setScreen({ key: 'cart' })} />
 )}
 
 
